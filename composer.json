@@ -1,0 +1,42 @@
+{
+    "name": "hval/scalapay-php",
+    "description": "Unofficial PHP library for the Scalapay Buy Now Pay Later payment gateway: orders, capture, refund, void and webhooks",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["scalapay", "bnpl", "buy-now-pay-later", "payment", "gateway", "checkout", "installments", "webhooks"],
+    "authors": [
+        {
+            "name": "Hermann Vallieri",
+            "email": "hermann@vallieri.email"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "ext-json": "*",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0|^2.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "nyholm/psr7": "^1.0",
+        "phpunit/phpunit": "^10.5|^11.0"
+    },
+    "suggest": {
+        "nyholm/psr7": "Lightweight PSR-7 and PSR-17 implementation"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hval\\Scalapay\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hval\\Scalapay\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {}
+    }
+}
