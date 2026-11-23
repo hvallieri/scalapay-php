@@ -23,6 +23,8 @@ final class Amount implements ModelInterface
             throw new ScalapayException('The amount cannot be empty.');
         }
 
+        self::decompose($this->amount);
+
         if (trim($this->currency) === '') {
             throw new ScalapayException('The currency cannot be empty.');
         }
@@ -55,6 +57,9 @@ final class Amount implements ModelInterface
 
     /**
      * Builds the amount from a value in minor units, avoiding any float arithmetic.
+     *
+     * Assumes a currency with two decimal places, such as the euro: for any other
+     * currency, build the amount from its decimal string.
      */
     public static function fromMinorUnits(int $minorUnits, string $currency = self::CURRENCY_EUR): self
     {
@@ -86,7 +91,7 @@ final class Amount implements ModelInterface
      *
      * @param Amount $other
      *
-     * @throws ScalapayException when the currencies differ or an amount is not a decimal number
+     * @throws ScalapayException when the currencies differ
      *
      * @return int -1, 0 or 1
      */
