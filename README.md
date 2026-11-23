@@ -40,8 +40,10 @@ use Hval\Scalapay\ScalapayClient;
 
 $factory = new HttpFactory();
 
-$scalapay = new ScalapayClient(Config::sandbox('your-api-key'), new Client(), $factory);
+$scalapay = new ScalapayClient(Config::sandbox('your-api-key'), new Client(['timeout' => 30, 'connect_timeout' => 5]), $factory);
 ```
+
+PSR-18 has no notion of timeouts: set them on your HTTP client, otherwise a call can hang indefinitely. A Guzzle client created without options never times out.
 
 **With Symfony HttpClient:**
 
@@ -88,7 +90,7 @@ $token = $created->getToken();               // store this: you will need it for
 $checkoutUrl = $created->getCheckoutUrl();   // redirect the customer here
 ```
 
-Amounts are strings, deliberately: the API declares them as such, and converting to float would introduce rounding errors and drop trailing zeros. Use `Amount::fromMinorUnits(4070)` if your own storage is in cents.
+Amounts are strings, deliberately: the API declares them as such, and converting to float would introduce rounding errors and drop trailing zeros. Use `Amount::fromMinorUnits(4070)` if your own storage is in cents (two decimal places, as for the euro). An amount that is not a decimal number is rejected on construction.
 
 Note that `billing` is optional while `shipping` is required — the opposite of what intuition suggests.
 
