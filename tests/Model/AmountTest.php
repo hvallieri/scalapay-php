@@ -148,10 +148,39 @@ final class AmountTest extends TestCase
         (new Amount('5', 'EUR'))->compareTo(new Amount('5', 'USD'));
     }
 
-    public function testItRefusesToCompareAnAmountThatIsNotADecimalNumber(): void
+    #[DataProvider('malformedAmounts')]
+    public function testItRejectsAnAmountThatIsNotADecimalNumber(string $amount): void
+    {
+        $this->expectException(ScalapayException::class);
+        $this->expectExceptionMessage('is not a decimal amount');
+
+        new Amount($amount);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function malformedAmounts(): iterable
+    {
+        yield 'letters' => ['abc'];
+
+        yield 'scientific notation' => ['1e3'];
+
+        yield 'decimal comma' => ['10,50'];
+
+        yield 'two decimal points' => ['1.2.3'];
+
+        yield 'a sign alone' => ['-'];
+
+        yield 'a point alone' => ['.'];
+
+        yield 'a currency symbol' => ['€10.00'];
+    }
+
+    public function testFromArrayRejectsAMalformedAmountFromAResponse(): void
     {
         $this->expectException(ScalapayException::class);
 
-        (new Amount('1e3'))->compareTo(new Amount('1000'));
+        Amount::fromArray(['amount' => 'n/a', 'currency' => 'EUR']);
     }
 }
